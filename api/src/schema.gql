@@ -15,6 +15,7 @@ enum FriendRequestStatus {
 }
 
 type FriendRequest {
+    id: ID!
     from: Person!
     to: Person!
     status: FriendRequestStatus!

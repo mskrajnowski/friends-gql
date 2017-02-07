@@ -26,12 +26,15 @@ function main() {
         bodyParser.json(), 
         graphqlExpress((req) => ({
             schema,
-            context: {},
+            context: {
+                authenticated: !!req.user.id,
+                user: req.user,
+            },
         }))
     );
 
     app.use('/graphiql', graphiqlExpress({
-        endpointURL: '/graphql',
+        endpointURL: 'http://localhost:8000/graphql',
     }));
 
     app.listen(8000, () => console.log('http://localhost:8000/graphiql'));
