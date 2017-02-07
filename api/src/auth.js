@@ -1,15 +1,51 @@
 const {BasicStrategy} = require('passport-http');
+const JWTStrategy = require('passport-jwt').Strategy;
+const ExtractJWT = require('passport-jwt').ExtractJwt;
+const jwt = require('jsonwebtoken');
 
 const {Person} = require('./model');
 
 
-function verify(req, username, password, done) {
+const SECRET = 'secret';
+
+
+function verifyBasic(req, username, password, done) {
     Person
     .findOne({where: {email: username.toLowerCase()}})
     .then((person) => done(
         null, 
-        person && person.testPassword(password) ? person : {}
+        person && person.testPassword(password) ? person : null
     ));
 }
+const basicStrategy = new BasicStrategy(
+    {
+        passReqToCallback: true,
+    }, 
+    verifyBasic
+);
 
-module.exports.basic = new BasicStrategy({passReqToCallback: true}, verify);
+function verifyJWT(req, payload, done) {
+    Person
+    .findById(payload.id)
+    .then((person) => done(null, person));
+}
+
+function generateJWT(person) {
+    const payload = {id: person.id};
+    return jwt.sign(payload, SECRET);
+}
+
+const jwtStrategy = new JWTStrategy(
+    {
+        passReqToCallback: true,
+        jwtFromRequest: ExtractJWT.fromAuthHeader(),
+        secretOrKey: SECRET,
+    }, 
+    verifyJWT
+);
+
+module.exports = {
+    basic: basicStrategy,
+    jwt: jwtStrategy,
+    generateJWT,
+};

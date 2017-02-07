@@ -15,19 +15,24 @@ function main() {
     const app = express();
 
     passport.use(auth.basic);
+    passport.use(auth.jwt);
 
-    app.use(
-        passport.initialize(),
-        passport.authenticate('basic', {session: false})
+    app.use(passport.initialize());
+
+    app.get(
+        '/auth',
+        passport.authenticate('basic', {session: false}),
+        (req, res) => res.end(auth.generateJWT(req.user))
     );
 
     app.use(
         '/graphql',
+        passport.authenticate(['basic', 'jwt'], {session: false}),
         bodyParser.json(), 
         graphqlExpress((req) => ({
             schema,
             context: {
-                authenticated: !!req.user.id,
+                authenticated: !!req.user,
                 user: req.user,
             },
         }))
