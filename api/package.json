@@ -5,21 +5,23 @@
   "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node src/index.js"
+    "start": "node src/index.js",
+    "populate": "node src/commands/populate.js"
   },
   "author": "",
   "license": "MIT",
-  "devDependencies": {
-  },
+  "devDependencies": {},
   "dependencies": {
     "bcrypt": "^1.0.2",
     "body-parser": "^1.16.0",
+    "casual": "^1.5.10",
     "dataloader": "^1.2.0",
     "express": "^4.14.1",
     "graphql": "^0.9.1",
     "graphql-server-express": "^0.6.0",
     "graphql-subscriptions": "^0.3.0",
     "graphql-tools": "^0.9.2",
+    "lodash": "^4.17.4",
     "passport": "^0.3.2",
     "passport-http": "^0.3.0",
     "pg": "^6.1.2",
