@@ -67,27 +67,7 @@ const Relationship = db.define('Relationship', {
     },
 }, {});
 
-const FriendRequestStatus = {
-    pending: 'PENDING',
-    accepted: 'ACCEPTED',
-    rejected: 'REJECTED',
-    cancelled: 'CANCELLED',
-};
-
-const friendRequestStatusValues = 
-    Object
-    .keys(FriendRequestStatus)
-    .map((key) => FriendRequestStatus[key]);
-
 const FriendRequest = db.define('FriendRequest', {
-    status: {
-        type: sql.STRING,
-        allowNull: false,
-        defaultValue: FriendRequestStatus.pending,
-        validate: {
-            isIn: friendRequestStatusValues,
-        },
-    },
     message: {
         type: sql.STRING,
         allowNull: false,
@@ -124,5 +104,4 @@ module.exports = {
     Person, 
     Relationship, 
     FriendRequest, 
-    FriendRequestStatus,
 };

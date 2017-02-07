@@ -6,7 +6,6 @@ const {
     Person, 
     Relationship, 
     FriendRequest, 
-    FriendRequestStatus,
 } = require('../model');
 
 
@@ -73,7 +72,6 @@ const relationships = (pairs) => [
 const request = ({from, to}) => ({
     fromId: from.id,
     toId: to.id,
-    status: FriendRequestStatus.pending,
     message: casual.sentence,
 });
 const requests = (pairs) => pairs.map(request);

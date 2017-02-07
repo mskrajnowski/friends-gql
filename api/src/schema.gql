@@ -7,26 +7,21 @@ type Person {
     friends: [Person]
 }
 
-enum FriendRequestStatus {
-    PENDING
-    ACCEPTED
-    REJECTED
-    CANCELLED
+type Self {
+    person: Person
+    sentRequests: [FriendRequest]
+    receivedRequests: [FriendRequest]
 }
 
 type FriendRequest {
     id: ID!
     from: Person!
     to: Person!
-    status: FriendRequestStatus!
     message: String
 }
 
 type Query {
-    me: Person
-    sentRequests: [FriendRequest]
-    receivedRequests: [FriendRequest]
-    
+    me: Self
     people: [Person]
 }
 
@@ -42,14 +37,13 @@ input FriendRequestInput {
 }
 
 type Mutation {
-    updateProfile(input: UpdateProfileInput): Person
+    updateProfile(input: UpdateProfileInput): Self
 
     requestFriend(input: FriendRequestInput): FriendRequest
-    cancelRequest(id: ID!): FriendRequest
-    acceptRequest(id: ID!): FriendRequest
-    rejectRequest(id: ID!): FriendRequest
-
-    removeFriend(id: ID!): Person
+    cancelRequest(id: ID!): Self
+    acceptRequest(id: ID!): Self
+    rejectRequest(id: ID!): Self
+    removeFriend(id: ID!): Self
 }
 
 schema {
