@@ -1,0 +1,8 @@
+dist
+tmp
+*.log
+
+# Node specific
+node_modules
+.npm
+npm-debug.log*

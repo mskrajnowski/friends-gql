@@ -1,0 +1,57 @@
+type Person {
+    id: ID!
+    name: String!
+    email: String
+    address: String
+
+    friends: [Person]
+}
+
+enum FriendRequestStatus {
+    PENDING
+    ACCEPTED
+    REJECTED
+    CANCELLED
+}
+
+type FriendRequest {
+    from: Person!
+    to: Person!
+    status: FriendRequestStatus!
+    message: String
+}
+
+type Query {
+    me: Person
+    sentRequests: [FriendRequest]
+    receivedRequests: [FriendRequest]
+    
+    people: [Person]
+}
+
+input UpdateProfileInput {
+    name: String
+    email: String
+    address: String
+}
+
+input FriendRequestInput {
+    id: ID!
+    message: String
+}
+
+type Mutation {
+    updateProfile(input: UpdateProfileInput): Person
+
+    requestFriend(input: FriendRequestInput): FriendRequest
+    cancelRequest(id: ID!): FriendRequest
+    acceptRequest(id: ID!): FriendRequest
+    rejectRequest(id: ID!): FriendRequest
+
+    removeFriend(id: ID!): Person
+}
+
+schema {
+  query: Query
+  mutation: Mutation
+}
