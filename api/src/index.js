@@ -19,11 +19,19 @@ function main() {
 
     app.use(passport.initialize());
 
-    app.get(
-        '/auth',
-        passport.authenticate('basic', {session: false}),
-        (req, res) => res.end(auth.generateJWT(req.user))
-    );
+    app.get('/auth', (req, res, next) => {
+        const authenticate = passport.authenticate('basic', (err, user) => {
+            if (err) {
+                next(err);
+            } else if (user) {
+                res.end(auth.generateJWT(user))
+            } else {
+                res.status(401).end();
+            }
+        });
+
+        authenticate(req, res, next);
+    });
 
     app.use(
         '/graphql',
