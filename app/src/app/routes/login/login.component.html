@@ -1,3 +1,4 @@
-<p>
-  login works!
-</p>
+<app-login-form (submit)="onSubmit($event)"
+                [loading]="loading"
+                [error]="error">
+</app-login-form>
