@@ -21,22 +21,27 @@ function ensureAuthenticated(fn) {
 
 module.exports = {
     Person: {
-        friends: (person) => person.getFriends(),
+        friends: (person, args, {loaders}) => 
+            loaders.Person.friendsOfId.load(person.id),
     },
     FriendRequest: {
-        from: (request) => request.getFrom(),
-        to: (request) => request.getTo(),
+        from: (request, args, {loaders}) =>
+            loaders.Person.byId.load(request.fromId),
+        to: (request, args, {loaders}) =>
+            loaders.Person.byId.load(request.toId),
     },
     Self: {
         person: (me) => me,
-        sentRequests: (me) => 
+        sentRequests: (me) =>
             FriendRequest.findAll({where: {fromId: me.id}}),
         receivedRequests: (me) =>
             FriendRequest.findAll({where: {toId: me.id}}),
     },
     Query: {
-        me: authenticatedOrNull((obj, args, context) => context.user),
-        people: () => Person.findAll(),
+        me: authenticatedOrNull((obj, args, {user}) => user),
+        people: authenticatedOrNull(
+            (obj, args, {loaders}) => loaders.Person.all()
+        ),
     },
     Mutation: {
         updateProfile: ensureAuthenticated(

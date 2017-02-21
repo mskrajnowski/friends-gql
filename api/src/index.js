@@ -8,6 +8,7 @@ const Sequelize = require('sequelize');
 const schema = require('./schema');
 const auth = require('./auth');
 const model = require('./model');
+const {loadersMiddleware} = require('./loaders');
 
 model.db.sync().then(() => main());
 
@@ -18,6 +19,7 @@ function main() {
     passport.use(auth.jwt);
 
     app.use(passport.initialize());
+    app.use(loadersMiddleware);
 
     app.get('/auth', (req, res, next) => {
         const authenticate = passport.authenticate('basic', (err, user) => {
@@ -36,12 +38,13 @@ function main() {
     app.use(
         '/graphql',
         passport.authenticate(['basic', 'jwt'], {session: false}),
-        bodyParser.json(), 
+        bodyParser.json(),
         graphqlExpress((req) => ({
             schema,
             context: {
                 authenticated: !!req.user,
                 user: req.user,
+                loaders: req.loaders,
             },
         }))
     );

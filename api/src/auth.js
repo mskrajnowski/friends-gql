@@ -10,8 +10,8 @@ const SECRET = 'secret';
 
 
 function verifyBasic(req, username, password, done) {
-    Person
-    .findOne({where: {email: username.toLowerCase()}})
+    req.loaders.Person.byEmail
+    .load(username.toLowerCase())
     .then((person) => done(
         null, 
         person && person.testPassword(password) ? person : null
@@ -25,8 +25,8 @@ const basicStrategy = new BasicStrategy(
 );
 
 function verifyJWT(req, payload, done) {
-    Person
-    .findById(payload.id)
+    req.loaders.Person.byId
+    .load(payload.id)
     .then((person) => done(null, person));
 }
 
