@@ -42,6 +42,14 @@ module.exports = {
         people: authenticatedOrNull(
             (obj, args, {loaders}) => loaders.Person.all()
         ),
+        person: authenticatedOrNull(
+            (obj, {id}, {loaders}) => 
+                loaders.Person.byId.load(id)
+                .then((person) => {
+                    if (person) { return person; }
+                    else { throw new Error('unknown person'); }
+                })
+        )
     },
     Mutation: {
         updateProfile: ensureAuthenticated(
